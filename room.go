@@ -82,7 +82,7 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		room:     r,
 		userData: objx.MustFromBase64(authCookie.Value),
 	}
-
+	glog.Infoln("Socket created for user: ", client.userData["Name"])
 	r.join <- client
 	defer func() { r.leave <- client }()
 	go client.write()
