@@ -32,13 +32,13 @@ func (r *room) run() {
 		select {
 		case client := <-r.join:
 			r.clients[client] = true
-			glog.Infoln("New client joined")
+			glog.Infoln("New client joined -", client.userData["name"])
 		case client := <-r.leave:
 			delete(r.clients, client)
 			close(client.send)
-			glog.Infoln("Client left")
+			glog.Infoln("Client left -", client.userData["name"])
 		case msg := <-r.forward:
-			glog.Infoln("Message received: ", msg.Message)
+			glog.Infoln("Message received -", msg.Message)
 			for client := range r.clients {
 				select {
 				case client.send <- msg:
@@ -82,7 +82,6 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		room:     r,
 		userData: objx.MustFromBase64(authCookie.Value),
 	}
-	glog.Infoln("Socket created for user: ", client.userData)
 	r.join <- client
 	defer func() { r.leave <- client }()
 	go client.write()
