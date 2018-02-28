@@ -70,7 +70,7 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	glog.Infoln("Request from:", req.Host)
 	if req.Header != nil {
 		for k, v := range req.Header {
-			glog.Infof("key[%s] value[%s]\n", k, v)
+			glog.Infof("Header[%s] value[%s]\n", k, v)
 		}
 	}
 
