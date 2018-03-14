@@ -42,7 +42,7 @@ func (r *room) run() {
 			for client := range r.clients {
 				select {
 				case client.send <- msg:
-					glog.Infoln(" -- sent to client")
+					glog.Infoln(msg, " -- sent to client")
 				default:
 					delete(r.clients, client)
 					close(client.send)
