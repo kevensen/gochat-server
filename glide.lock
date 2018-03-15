@@ -1,0 +1,10 @@
+hash: 15ddee22e277170e8ed5807f60e84e26bf57948f7626b408cf1c6fcb4e6682ef
+updated: 2018-03-15T09:32:10.790503-04:00
+imports:
+- name: github.com/golang/glog
+  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
+- name: github.com/gorilla/websocket
+  version: ea4d1f681babbce9545c9c5f3d5194a789c89f5b
+- name: github.com/stretchr/objx
+  version: 8a3f7159479fbc75b30357fbc48f380b7320f08e
+testImports: []

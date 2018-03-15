@@ -5,7 +5,6 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
-	"github.com/rhtps/gochat/trace"
 	"github.com/stretchr/objx"
 )
 
@@ -14,7 +13,6 @@ type room struct {
 	join    chan *client
 	leave   chan *client
 	clients map[*client]bool
-	tracer  trace.Tracer
 }
 
 func newRoom() *room {
@@ -23,7 +21,6 @@ func newRoom() *room {
 		join:    make(chan *client),
 		leave:   make(chan *client),
 		clients: make(map[*client]bool),
-		tracer:  trace.Off(),
 	}
 }
 
