@@ -5,7 +5,6 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
-	"github.com/stretchr/objx"
 )
 
 type room struct {
@@ -29,13 +28,13 @@ func (r *room) run() {
 		select {
 		case client := <-r.join:
 			r.clients[client] = true
-			glog.Infoln("New client joined -", client.userData["name"])
+			glog.Infoln("Room - new client joined")
 		case client := <-r.leave:
 			delete(r.clients, client)
 			close(client.send)
-			glog.Infoln("Client left -", client.userData["name"])
+			glog.Infoln("Room - client left")
 		case msg := <-r.forward:
-			glog.Infoln("Message received -", msg.Message)
+			glog.Infoln("Room - message received -", msg.Message)
 			for client := range r.clients {
 				select {
 				case client.send <- msg:
@@ -64,29 +63,17 @@ var upgrader = &websocket.Upgrader{
 }
 
 func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	glog.Infoln("Request from:", req.Host)
-	if req.Header != nil {
-		for k, v := range req.Header {
-			glog.Infof("Header[%s] value[%s]\n", k, v)
-		}
-	}
 
 	socket, err := upgrader.Upgrade(w, req, nil)
 	if err != nil {
 		glog.Errorln("ServeHTTP:", err)
 		return
 	}
-	authCookie, err := req.Cookie("auth")
-	if err != nil {
-		glog.Warningln("Failed to get auth cookie:", err)
-		return
-	}
 
 	client := &client{
-		socket:   socket,
-		send:     make(chan *message, messageBufferSize),
-		room:     r,
-		userData: objx.MustFromBase64(authCookie.Value),
+		socket: socket,
+		send:   make(chan *message, messageBufferSize),
+		room:   r,
 	}
 	r.join <- client
 	defer func() { r.leave <- client }()

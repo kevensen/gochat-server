@@ -19,7 +19,6 @@ func (c *client) read() {
 		var msg *message
 		if err := c.socket.ReadJSON(&msg); err == nil {
 			msg.When = time.Now().Format("3:04PM")
-			msg.Name = c.userData["name"].(string)
 			c.room.forward <- msg
 		} else {
 			break
